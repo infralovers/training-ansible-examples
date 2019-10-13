@@ -1,0 +1,25 @@
+---
+driver:
+  name: docker
+
+provisioner:
+  name: ansible_playbook
+  hosts: localhost
+  require_chef_for_busser: false
+  require_ruby_for_busser: false
+
+platforms:
+  - name: centos-6.7
+
+verifier:
+  name: inspec
+
+suites:
+  - name: default
+    verifier:
+    inspec_tests:
+      - test/integration/default
+    provisioner:
+      playbook: test/integration/default/test.yml
+      additional_copy_path:
+        - "."

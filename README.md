@@ -3,7 +3,7 @@
 install ansible
 
 ```bash
-sudo yum install ansible
+sudo yum install ansible -y
 ```
 
 create ssh key
