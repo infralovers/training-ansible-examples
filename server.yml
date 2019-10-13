@@ -1,0 +1,7 @@
+---
+- name: install the latest version of Apache
+  hosts: hosts
+  become_user: root
+  become: yes
+  tasks:
+  - import_tasks: tasks/server_tasks.yml

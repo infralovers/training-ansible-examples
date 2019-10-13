@@ -1,0 +1,13 @@
+cloud9 ansible_connection=local ansible_python_interpreter=/usr/bin/python2.7
+
+host1 ansible_host=host-git-01.commandemy.training
+host2 ansible_host=host-git-02.commandemy.training
+host3 ansible_host=host-git-03.commandemy.training
+
+[hosts]
+host1
+host2
+host3
+
+[servers]
+server1 ansible_host=host-git-02.commandemy.training

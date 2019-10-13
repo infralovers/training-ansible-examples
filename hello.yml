@@ -1,0 +1,12 @@
+---
+- name: Create File with Permissions
+  hosts: servers
+  become_user: root
+  become: yes
+  tasks:
+  - name: Create hello world file with content
+    copy:
+      dest: "/hello_world.txt"  
+      content: Hello World!
+      mode: 0640
+      owner: centos
