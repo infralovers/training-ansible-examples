@@ -59,5 +59,5 @@ https://github.com/dev-sec/linux-baseline.git
 ```
 scp centos@host-git-<your-number>.commandemy.training:\
 /etc/httpd/conf/httpd.conf \
-~/roles/webserver/templates/httpd.conf.j2
+~/playbooks/roles/webserver/templates/httpd.conf.j2
 ```
