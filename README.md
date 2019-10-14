@@ -61,3 +61,7 @@ scp centos@host-git-<your-number>.commandemy.training:\
 /etc/httpd/conf/httpd.conf \
 ~/playbooks/roles/webserver/templates/httpd.conf.j2
 ```
+
+```
+scp -P 32771 -i .kitchen/docker_id_rsa kitchen@127.0.0.1:/etc/httpd/conf/httpd.conf templates/httpd.conf.6.j2
+```
