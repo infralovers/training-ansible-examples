@@ -4,9 +4,11 @@ driver:
 
 provisioner:
   name: ansible_playbook
-  hosts: localhost
+  hosts: nodes
   require_chef_for_busser: false
   require_ruby_for_busser: false
+  # ansible_verbose: true
+  ansible_diff: true
 
 platforms:
   - name: centos-6.7
@@ -21,5 +23,3 @@ suites:
       - test/integration/default
     provisioner:
       playbook: test/integration/default/test.yml
-      additional_copy_path:
-        - "."
