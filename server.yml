@@ -1,7 +1,10 @@
 ---
 - name: install the latest version of Apache
-  hosts: hosts
+  hosts: servers
   become_user: root
   become: yes
   tasks:
-  - import_tasks: tasks/server_tasks.yml
+  - name: install httpd
+    package:
+      name=httpd
+      state=latest
