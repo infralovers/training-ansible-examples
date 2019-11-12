@@ -3,13 +3,13 @@
 install ansible
 
 ```bash
-sudo yum install ansible -y
+sudo /usr/bin/pip-3.6 install ansible
 ```
 
 create ssh key
 
 ```
-ssh-keygen -t rsa
+ssh-keygen
 ```
 
 copy ssh identity to all hosts
@@ -20,7 +20,7 @@ ssh-copy-id centos@host-git-<your-number>.commandemy.training
 ssh-copy-id centos@host-git-<your-number>.commandemy.training
 ```
 
-update `~/playbooks/hosts` with your host <your-number> entries
+update `~/playbooks/inventory` with your host <your-number> entries
 
 test ansible config with `server.yml`
 
@@ -32,7 +32,7 @@ ansible-playbook server.yml
 ## install chefdk
 
 ```
-curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chefdk -v 3.11.3
+curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chefdk -v 3.12.10
 ```
 
 ```
