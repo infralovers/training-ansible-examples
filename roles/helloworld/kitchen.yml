@@ -21,5 +21,3 @@ suites:
     verifier:
     inspec_tests:
       - test/integration/default
-    provisioner:
-      playbook: test/integration/default/test.yml
