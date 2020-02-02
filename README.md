@@ -32,7 +32,7 @@ ansible-playbook server.yml
 ## install chefdk
 
 ```
-curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chefdk -v 3.12.10
+curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chefdk -v 3.13.1
 ```
 
 ```
@@ -40,13 +40,20 @@ chef gem install kitchen-ansible
 chef gem install kitchen-docker
 ```
 
-delete some docker images
+## Use remote docker
 
 ```
-docker image rm lambci/lambda:nodejs8.10
-docker image rm lambci/lambda:nodejs6.10
-docker image rm lambci/lambda:nodejs4.3 
+ssh centos@kitchen-git-<your-number>.commandemy.training hostname -f
+
+# now use that as youre remote host
+REMOTE_HOST=$(ssh centos@kitchen-git-<your-number>.commandemy.training hostname -f)
+export DOCKER_HOST=tcp://$REMOTE_HOST:2375
+# check what you've got
+echo $DOCKER_HOST
+# chef if it is working
+docker ps
 ```
+
 
 ## Helpful Commands
 
