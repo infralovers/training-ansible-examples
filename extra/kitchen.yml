@@ -1,0 +1,28 @@
+---
+driver:
+  name: docker
+
+provisioner:
+  name: ansible_playbook
+  hosts: nodes
+  require_chef_for_busser: false
+  require_ruby_for_busser: false
+  # ansible_verbose: true
+  ansible_diff: true
+
+platforms:
+  - name: centos-6.7
+  - name: centos-7
+    driver:
+      privileged: true
+      run_command: /usr/sbin/init
+      provision_command:
+        - /bin/yum install -y iproute
+verifier:
+  name: inspec
+
+suites:
+  - name: default
+    verifier:
+    inspec_tests:
+      - test/integration/default
