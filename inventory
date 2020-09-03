@@ -1,4 +1,4 @@
 workstation ansible_connection=local
 
 [servers]
-server1 ansible_host=host.ansible-user-01-i-01.commandemy.training
+server1 ansible_host=host.ansible-user-<your-user>-i-01.commandemy.training
