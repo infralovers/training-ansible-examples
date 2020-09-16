@@ -8,45 +8,56 @@ sudo /usr/bin/pip-3.6 install ansible
 
 create ssh key
 
-```
+```bash
+# for testing purposes we only the defaults without a passphrase
 ssh-keygen
 ```
 
 copy ssh identity to all hosts
 
-```
-ssh-copy-id centos@host-git-<your-number>.commandemy.training
-ssh-copy-id centos@host-git-<your-number>.commandemy.training
-ssh-copy-id centos@host-git-<your-number>.commandemy.training
+```bash
+ssh-copy-id centos@host.ansible-user-<your-user>-i-01.commandemy.training
+ssh-copy-id centos@host.ansible-user-<your-user>-i-01.commandemy.training
+ssh-copy-id centos@host.ansible-user-<your-user>-i-01.commandemy.training
 ```
 
-update `~/playbooks/inventory` with your host <your-number> entries
+update `~/playbooks/inventory` with your user-number <your-user> entries
 
 test ansible config with `server.yml`
 
-```
+```bash
 cd playbooks
 ansible-playbook server.yml
 ```
 
-## install chefdk
+## install cinc
 
-```
-curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chefdk -v 3.13.1
-```
-
-```
-chef gem install kitchen-ansible
-chef gem install kitchen-docker
+```bash
+$ curl -L https://omnitruck.cinc.sh/install.sh \
+  | sudo bash -s -- -P cinc-workstation \
+  -v 20.8.125 -c unstable
 ```
 
-## Use remote docker
-
+```bash
+$ # on centos 8
+$ sudo dnf group install "Development Tools"
 ```
-ssh centos@kitchen-git-<your-number>.commandemy.training hostname -f
+
+- Installation of the ansible provisioner
+- Installation of the docker driver
+
+```bash
+$ chef gem install kitchen-ansible
+$ chef gem install kitchen-docker
+```
+
+## Use remote docker with kitchen
+
+```bash
+ssh centos@host.ansible-user-<your-user>-i-01.commandemy.training hostname -f
 
 # now use that as youre remote host
-REMOTE_HOST=$(ssh centos@kitchen-git-<your-number>.commandemy.training hostname -f)
+REMOTE_HOST=$(ssh centos@host.ansible-user-<your-user>-i-01.commandemy.training hostname -f)
 export DOCKER_HOST=tcp://$REMOTE_HOST:2375
 # check what you've got
 echo $DOCKER_HOST
@@ -54,36 +65,35 @@ echo $DOCKER_HOST
 docker ps
 ```
 
-
 ## Helpful Commands
 
-use inspec to get compliance state of linux node: 
+use inspec to get compliance state of linux node:
 
-```
-inspec exec -i ~/.ssh/id_rsa \
--t ssh://centos@host-git-<your-number>.commandemy.training \
+```bash
+cinc-auditor exec -i ~/.ssh/id_rsa \
+-t ssh://centos@host.ansible-user-01-i-01.commandemy.training \
 https://github.com/dev-sec/linux-baseline.git
 ```
 
 run your inspec test against remote node:
 
-```
-inspec exec -i ~/.ssh/id_rsa \
--t ssh://centos@host-git-<your-number>.commandemy.training \
-~/playbooks/roles/webserver/tests
+```bash
+cinc-auditor exec -i ~/.ssh/id_rsa \
+-t ssh://centos@host.ansible-user-01-i-01.commandemy.training \
+~/playbooks/roles/webserver/test/integration/default/inspec/
 ```
 
 get the httpd config for centos-7
 
-```
+```bash
 scp centos@host-git-<your-number>.commandemy.training:\
 /etc/httpd/conf/httpd.conf \
-~/playbooks/roles/webserver/templates/httpd.conf.7.j2
+~/playbooks/roles/webserver/templates/httpd.conf.8.j2
 ```
 
 get the httpd config for centos-6 from kitchen
 
-```
+```bash
 # get the port:
 cd ~/playbooks/roles/webserver/
 cat .kitchen/default-centos-67.yml
