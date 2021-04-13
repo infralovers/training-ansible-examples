@@ -16,9 +16,9 @@ ssh-keygen
 copy ssh identity to all hosts
 
 ```bash
-ssh-copy-id centos@host.ansible-user-<your-user>-i-01.commandemy.training
-ssh-copy-id centos@host.ansible-user-<your-user>-i-01.commandemy.training
-ssh-copy-id centos@host.ansible-user-<your-user>-i-01.commandemy.training
+ssh-copy-id coder@host.ansible-user-<your-user>-i-01.commandemy.training
+ssh-copy-id coder@host.ansible-user-<your-user>-i-01.commandemy.training
+ssh-copy-id coder@host.ansible-user-<your-user>-i-01.commandemy.training
 ```
 
 update `~/playbooks/inventory` with your user-number <your-user> entries
@@ -54,10 +54,10 @@ $ chef gem install kitchen-docker
 ## Use remote docker with kitchen
 
 ```bash
-ssh centos@host.ansible-user-<your-user>-i-01.commandemy.training hostname -f
+ssh coder@host.ansible-user-<your-user>-i-01.commandemy.training hostname -f
 
 # now use that as youre remote host
-REMOTE_HOST=$(ssh centos@host.ansible-user-<your-user>-i-01.commandemy.training hostname -f)
+REMOTE_HOST=$(ssh coder@host.ansible-user-<your-user>-i-01.commandemy.training hostname -f)
 export DOCKER_HOST=tcp://$REMOTE_HOST:2375
 # check what you've got
 echo $DOCKER_HOST
@@ -71,7 +71,7 @@ use inspec to get compliance state of linux node:
 
 ```bash
 cinc-auditor exec -i ~/.ssh/id_rsa \
--t ssh://centos@host.ansible-user-01-i-01.commandemy.training \
+-t ssh://coder@host.ansible-user-01-i-01.commandemy.training \
 https://github.com/dev-sec/linux-baseline.git
 ```
 
@@ -79,14 +79,14 @@ run your inspec test against remote node:
 
 ```bash
 cinc-auditor exec -i ~/.ssh/id_rsa \
--t ssh://centos@host.ansible-user-01-i-01.commandemy.training \
+-t ssh://coder@host.ansible-user-01-i-01.commandemy.training \
 ~/playbooks/roles/webserver/test/integration/default/inspec/
 ```
 
 get the httpd config for centos-7
 
 ```bash
-scp centos@host-git-<your-number>.commandemy.training:\
+scp coder@host-git-<your-number>.commandemy.training:\
 /etc/httpd/conf/httpd.conf \
 ~/playbooks/roles/webserver/templates/httpd.conf.8.j2
 ```
