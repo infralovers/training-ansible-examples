@@ -1,10 +1,8 @@
 ---
 - name: install some dev tools
-  hosts: cloud9
+  hosts: workstation
   become_user: root
   become: yes
   tasks:
-  - name: install tree
-    package:
-      name=tree
-      state=latest
+  - name: check if we can run ansible
+    ping:
