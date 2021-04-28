@@ -5,8 +5,10 @@ driver:
   name: docker
 platforms:
   - name: centos7
-    image: docker.io/pycontribs/centos:7
+    image: jaybrueder/ansible:centos7
     pre_build_image: true
+    privileged: true
+    command: "/usr/sbin/init"
 provisioner:
   name: ansible
 verifier:
