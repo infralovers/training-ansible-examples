@@ -4,7 +4,5 @@
   become_user: root
   become: yes
   tasks:
-  - name: install httpd
-    package:
-      name=httpd
-      state=latest
+  - name: install Apache
+    apt: name=apache2 update_cache=yes state=latest
