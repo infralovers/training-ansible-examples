@@ -4,12 +4,20 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: centos7
-    image: jaybrueder/ansible:centos7
-    pre_build_image: true
+  - name: instance
+    image: "jaybrueder/ubuntu:21.04.1"
+    command: "/lib/systemd/systemd"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     privileged: true
-    command: "/usr/sbin/init"
+    pre_build_image: true
+    environment:
+      container: docker
+    security_opts:
+      - apparmor=unconfined
+    env:
+      container: docker
 provisioner:
   name: ansible
 verifier:
-  name: inspec
+  name: ansible
