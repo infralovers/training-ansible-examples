@@ -1,5 +1,5 @@
 ---
-- name: install some dev tools
+- name: ping workstation
   hosts: workstation
   become_user: root
   become: yes
