@@ -1,27 +1,31 @@
 # playbooks
 
-install ansible
+## install ansible
+
+### install ansible by pip within a python virtualenv
 
 ```bash
-sudo /usr/bin/pip-3.6 install ansible
+virtualenv venv
+source venv/bin/activate
+pip3 install ansible==2.10.7
 ```
 
-create ssh key
+## create ssh key
 
 ```bash
 # for testing purposes we only the defaults without a passphrase
 ssh-keygen
 ```
 
-copy ssh identity to all hosts
+## copy ssh identity to all hosts
 
 ```bash
-ssh-copy-id coder@host.ansible-user-<your-user>-i-01.commandemy.training
-ssh-copy-id coder@host.ansible-user-<your-user>-i-01.commandemy.training
-ssh-copy-id coder@host.ansible-user-<your-user>-i-01.commandemy.training
+ssh-copy-id coder@host.ansible-user-<your-user>-i-01.<prefix>.commandemy.training
+ssh-copy-id coder@host.ansible-user-<your-user>-i-02.<prefix>.commandemy.training
+ssh-copy-id coder@host.ansible-user-<your-user>-i-03.<prefix>.commandemy.training
 ```
 
-update `~/playbooks/inventory` with your user-number <your-user> entries
+update `~/playbooks/inventory` with your user-number <your-user> entries and animal <prefix>
 
 test ansible config with `server.yml`
 
@@ -54,10 +58,10 @@ $ chef gem install kitchen-docker
 ## Use remote docker with kitchen
 
 ```bash
-ssh coder@host.ansible-user-<your-user>-i-01.commandemy.training hostname -f
+ssh coder@host.ansible-user-<your-user>-i-01.<prefix>.commandemy.training hostname -f
 
 # now use that as youre remote host
-REMOTE_HOST=$(ssh coder@host.ansible-user-<your-user>-i-01.commandemy.training hostname -f)
+REMOTE_HOST=$(ssh coder@host.ansible-user-<your-user>-i-01.<prefix>.commandemy.training hostname -f)
 export DOCKER_HOST=tcp://$REMOTE_HOST:2375
 # check what you've got
 echo $DOCKER_HOST
