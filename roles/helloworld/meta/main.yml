@@ -1,4 +1,6 @@
 galaxy_info:
+  role_name: helloworld
+  namespace: coder
   author: your name
   description: your role description
   company: your company (optional)
