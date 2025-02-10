@@ -1,7 +1,7 @@
 workstation ansible_connection=local
 
 [servers]
-host1 ansible_host=@ENV-NAME-@ENV-USER-ID-01.@ENV-ANIMAL.@ENV-DNS-NAME
-host2 ansible_host=@ENV-NAME-@ENV-USER-ID-02.@ENV-ANIMAL.@ENV-DNS-NAME
-host3 ansible_host=@ENV-NAME-@ENV-USER-ID-03.@ENV-ANIMAL.@ENV-DNS-NAME
+host1 ansible_host=<ENV-NAME>-<ENV-USER-ID-01>.<ENV-ANIMAL>.<ENV-DOMAIN>
+host2 ansible_host=<ENV-NAME>-<ENV-USER-ID-02>.<ENV-ANIMAL>.<ENV-DOMAIN>
+host3 ansible_host=<ENV-NAME>-<ENV-USER-ID-03>.<ENV-ANIMAL>.<ENV-DOMAIN>
 
