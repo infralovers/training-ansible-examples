@@ -7,7 +7,7 @@
 ```bash
 virtualenv venv
 source venv/bin/activate
-pip3 install ansible==2.10.7
+pip3 install -r requirements.txt
 ```
 
 ## create ssh key
@@ -20,17 +20,22 @@ ssh-keygen
 ## copy ssh identity to all hosts
 
 ```bash
-ssh-copy-id coder@host.ansible-user-<your-user>-i-01.<prefix>.commandemy.training
-ssh-copy-id coder@host.ansible-user-<your-user>-i-02.<prefix>.commandemy.training
-ssh-copy-id coder@host.ansible-user-<your-user>-i-03.<prefix>.commandemy.training
+ssh-copy-id <ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
+ssh-copy-id <ENV-NAME>-<ENV-USER-ID>-02.<ENV-ANIMAL>.<ENV-DOMAIN>
+ssh-copy-id <ENV-NAME>-<ENV-USER-ID>-03.<ENV-ANIMAL>.<ENV-DOMAIN>
 ```
 
-update `~/playbooks/inventory` with your user-number <your-user> entries and animal <prefix>
+## update inventory
+
+```shell
+replace_variables
+```
+
+### test play
 
 test ansible config with `server.yml`
 
 ```bash
-cd playbooks
 ansible-playbook server.yml
 ```
 
@@ -58,10 +63,10 @@ $ chef gem install kitchen-docker
 ## Use remote docker with kitchen
 
 ```bash
-ssh coder@host.ansible-user-<your-user>-i-01.<prefix>.commandemy.training hostname -f
+ssh coder@<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN> hostname -f
 
 # now use that as youre remote host
-REMOTE_HOST=$(ssh coder@host.ansible-user-<your-user>-i-01.<prefix>.commandemy.training hostname -f)
+REMOTE_HOST=$(ssh coder@<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN> hostname -f)
 export DOCKER_HOST=tcp://$REMOTE_HOST:2375
 # check what you've got
 echo $DOCKER_HOST
@@ -75,7 +80,7 @@ use inspec to get compliance state of linux node:
 
 ```bash
 cinc-auditor exec -i ~/.ssh/id_rsa \
--t ssh://coder@host.ansible-user-01-i-01.commandemy.training \
+-t ssh://coder@<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN> \
 https://github.com/dev-sec/linux-baseline.git
 ```
 
@@ -83,14 +88,14 @@ run your inspec test against remote node:
 
 ```bash
 cinc-auditor exec -i ~/.ssh/id_rsa \
--t ssh://coder@host.ansible-user-01-i-01.commandemy.training \
+-t ssh://coder@<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN> \
 ~/playbooks/roles/webserver/test/integration/default/inspec/
 ```
 
 get the httpd config for centos-7
 
 ```bash
-scp coder@host-git-<your-number>.commandemy.training:\
+scp coder@h<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>:\
 /etc/httpd/conf/httpd.conf \
 ~/playbooks/roles/webserver/templates/httpd.conf.8.j2
 ```
