@@ -1,51 +1,56 @@
 ---
 - name: Verify
   hosts: all
-  become: true
   vars:
     auditor_test_directory: /tmp/molecule/cinc-auditor
   tasks:
     - name: Download cinc-auditor
-      get_url:
+      ansible.builtin.get_url:
         url: https://omnitruck.cinc.sh/install.sh
         dest: /tmp/install.sh
-        mode: '0775'
+        mode: '0700'
+        owner: root
 
     - name: Install cinc-auditor
-      shell: "bash /tmp/install.sh -s -- -P cinc-auditor -v 4"
+      become: true
+      ansible.builtin.shell:
+        executable: bash
+        cmd: "/tmp/install.sh -P cinc-auditor -v 6"
+        creates: /opt/cinc-auditor/bin/cinc-auditor
 
     - name: Create audtior test directory
-      file:
+      ansible.builtin.file:
         path: "{{ auditor_test_directory }}"
         state: directory
 
     - name: Copy audtior test directories
-      file:
+      ansible.builtin.file:
         path: "{{ auditor_test_directory }}/{{ item.path }}"
         state: directory
         mode: 0755
-      with_filetree: "{{ lookup('env', 'MOLECULE_VERIFIER_TEST_DIRECTORY') }}/"
+      with_community.general.filetree: "{{ lookup('env', 'MOLECULE_VERIFIER_TEST_DIRECTORY') }}/"
       when: item.state == 'directory'
 
     - name: Copy audtior test files
-      copy:
+      ansible.builtin.copy:
         src: "{{ item.src }}"
         dest: "{{ auditor_test_directory }}/{{ item.path }}"
         mode: 0644
-      with_filetree: "{{ lookup('env', 'MOLECULE_VERIFIER_TEST_DIRECTORY') }}/"
+      with_community.general.filetree: "{{ lookup('env', 'MOLECULE_VERIFIER_TEST_DIRECTORY') }}/"
       when: item.state == 'file'
 
     - name: Execute auditor tests
-      command: "/opt/cinc-auditor/bin/cinc-auditor exec {{ auditor_test_directory }}"
       register: test_results
+      become: true
       changed_when: false
       ignore_errors: true
-
-    - name: Display details about the auditor results
-      debug:
-        msg: "{{ test_results.stdout_lines }}"
+      no_log: true
+      ansible.builtin.command:
+        chdir: "{{ auditor_test_directory }}"
+        cmd: "/opt/cinc-auditor/bin/cinc-auditor exec --no-color ."
 
     - name: Fail when tests fail
-      fail:
-        msg: "Auditor failed to validate"
-      when: test_results.rc != 0
+      ansible.builtin.assert:
+        that: test_results.rc == 0
+        fail_msg: "auditor failed {{ test_results.stdout_lines }}"
+        success_msg: "auditor successful"

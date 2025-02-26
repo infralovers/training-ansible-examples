@@ -1,7 +1,6 @@
 ---
 - name: Converge
   hosts: all
-  tasks:
-    - name: "Include helloworld"
-      include_role:
-        name: "helloworld"
+  gather_facts: false
+  roles:
+  - role: helloworld

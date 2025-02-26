@@ -31,7 +31,7 @@ ssh-copy-id <ENV-NAME>-<ENV-USER-ID>-03.<ENV-ANIMAL>.<ENV-DOMAIN>
 replace_variables
 ```
 
-### test play
+### execute play
 
 test ansible config with `server.yml`
 
