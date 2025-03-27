@@ -1,0 +1,26 @@
+policies:
+  - uid: os-check
+    name: Core Checks
+    groups:
+      - title: root user exists
+        filters: asset.family.contains('linux')
+        checks:
+          - uid: root-user-exists
+          - uid: hello-world-exists
+          - uid: hello-world-content
+
+queries:
+  - uid: root-user-exists
+    title: Check for root user
+    mql: |
+      users.where(name == "root").all(u: u.home == "/root" && u.uid == 0 )
+
+  - uid: hello-world-exists
+    title: Check for hello-world
+    mql: | 
+        file("/hello_world.txt").exists
+
+  - uid: hello-world-content
+    title: Check for content within hello-world
+    mql: |
+        command('cat /hello_world.txt').stdout.contains("Hello world!")        

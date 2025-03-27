@@ -1,0 +1,24 @@
+---
+- name: Verify
+  hosts: all
+  vars:
+    auditor_test_directory: /tmp/molecule/cinc-auditor
+  tasks:
+    - name: install mondoo client
+      vars:
+        registration_token: ""
+      ansible.builtin.include_role:
+        name: mondoo.client
+    - name: Download cinc-auditor
+      ansible.builtin.get_url:
+        url: https://omnitruck.cinc.sh/install.sh
+        dest: /tmp/install.sh
+        mode: '0700'
+        owner: root
+
+    - name: Install cinc-auditor
+      become: true
+      ansible.builtin.shell:
+        executable: bash
+        cmd: "/tmp/install.sh -P cinc-auditor -v 6"
+        creates: /opt/cinc-auditor/bin/cinc-auditor

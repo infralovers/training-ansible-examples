@@ -3,21 +3,8 @@
   hosts: all
   vars:
     auditor_test_directory: /tmp/molecule/cinc-auditor
+    use_cinc_auditor: false
   tasks:
-    - name: Download cinc-auditor
-      ansible.builtin.get_url:
-        url: https://omnitruck.cinc.sh/install.sh
-        dest: /tmp/install.sh
-        mode: '0700'
-        owner: root
-
-    - name: Install cinc-auditor
-      become: true
-      ansible.builtin.shell:
-        executable: bash
-        cmd: "/tmp/install.sh -P cinc-auditor -v 6"
-        creates: /opt/cinc-auditor/bin/cinc-auditor
-
     - name: Create audtior test directory
       ansible.builtin.file:
         path: "{{ auditor_test_directory }}"
@@ -39,18 +26,37 @@
       with_community.general.filetree: "{{ lookup('env', 'MOLECULE_VERIFIER_TEST_DIRECTORY') }}/"
       when: item.state == 'file'
 
-    - name: Execute auditor tests
-      register: test_results
-      become: true
-      changed_when: false
-      ignore_errors: true
-      no_log: true
-      ansible.builtin.command:
-        chdir: "{{ auditor_test_directory }}"
-        cmd: "/opt/cinc-auditor/bin/cinc-auditor exec --no-color ."
+    - name: Execute tests
+      block:
+
+      - name: Execute cinc auditor
+        when: use_cinc_auditor
+        register: cinc_test_results
+        become: true
+        changed_when: false
+        ignore_errors: true
+        no_log: true
+        ansible.builtin.command:
+          chdir: "{{ auditor_test_directory }}"
+          cmd: "/opt/cinc-auditor/bin/cinc-auditor exec --no-color ."
+
+      - name: Execute mondoo/cnspec
+        when: not use_cinc_auditor
+        register: mondoo_test_results
+        become: true
+        changed_when: false
+        ignore_errors: true
+        no_log: true
+        ansible.builtin.command:
+          chdir: "{{ auditor_test_directory }}"
+          cmd: "cnspec scan local --score-threshold 80 -f test_default.mql"
+
+      - name: test_result
+        set_fact:
+          test_results: '{{ use_cinc_auditor | ansible.builtin.ternary(cinc_test_results, mondoo_test_results) }}'
 
     - name: Fail when tests fail
       ansible.builtin.assert:
         that: test_results.rc == 0
-        fail_msg: "auditor failed {{ test_results.stdout_lines }}"
+        fail_msg: "auditor failed {{ test_results.stdout }}"
         success_msg: "auditor successful"

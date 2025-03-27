@@ -3,3 +3,6 @@ collections:
     version: "4.4.0"
   - name: community.general
     version: "10.4.0"
+roles:
+  - name: mondoo.client
+    version: "v2.6.0"
