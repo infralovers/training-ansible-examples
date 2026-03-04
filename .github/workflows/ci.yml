@@ -2,21 +2,16 @@ name: Infralovers Container Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-
   build:
     uses: infralovers/.github/.github/workflows/container.yml@main
-    secrets:
-      BOT_ACCESS_TOKEN: "${{ fromJSON(secrets.VAULT_KV_1D187965_OP_GITHUB_INFRALOVERS).PAT }}"
-      MONDOO_SERVICE_ACCOUNT: ""
     with:
       dockerfile: roles/helloworld/molecule/default/Dockerfile
       score: 0
       platforms: "linux/amd64"
       release: true
-      
