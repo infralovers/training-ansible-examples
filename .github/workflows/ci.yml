@@ -15,3 +15,4 @@ jobs:
       score: 0
       platforms: "linux/amd64"
       release: true
+      push_quay: false
